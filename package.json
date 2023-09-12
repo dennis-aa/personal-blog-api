@@ -1,0 +1,14 @@
+{
+  "name": "personal-blog",
+  "version": "1.0.0",
+  "description": "A blog where I post about my personal projects",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dennis Arias",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
