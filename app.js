@@ -2,44 +2,36 @@
 
 //Imports
 const express = require("express");
-const fs = require("fs");
+const morgan = require("morgan");
+
+const postRouter = require("./routes/postRoutes");
+const userRouter = require("./routes/userRoutes");
 
 //Initialize Express
 const app = express();
+
+//Using third-party Middleware
+app.use(morgan("dev"));
 
 //Setup Middleware and import data from JSON
 
 app.use(express.json());
 
-const posts = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/posts.json`));
+//Adding our own Middleware for examples sake
 
-//Setup callback functions
+app.use((req, res, next) => {
+  console.log("Bienvendios to our Middleware!");
+  next();
+});
 
-const getAllPosts = (req, res) => {
-  res.status(200).json({
-    status: "success",
-    data: {
-      posts,
-    },
-  });
-};
-
-const getAPost = (req, res) => {
-  const id = req.params.id * 1; //Remember a quick way to make a stirng a number
-  const post = posts.find((element) => element.id === id);
-  res.status(200).json({
-    status: "success",
-    post: post,
-  });
-};
+//Adding a field to our request
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 //Setup routes
-app.route("/api/v1/posts").get(getAllPosts);
-app.route("/api/v1/posts/:id").get(getAPost);
+app.use("/api/v1/posts", postRouter);
+app.use("/api/v1/users", userRouter);
 
-//Setup port to listen on
-const port = 3000;
-
-app.listen(port, () => {
-  console.log(`App running on port ${port}`);
-});
+module.exports = app;
