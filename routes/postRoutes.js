@@ -7,6 +7,10 @@ router
   .get(postController.getAllPosts)
   .post(postController.createPost);
 
-router.route("/:id").get(postController.getAPost);
+router
+  .route("/:id")
+  .get(postController.getAPost)
+  .patch(postController.updatePost)
+  .delete(postController.deletePost);
 
 module.exports = router;

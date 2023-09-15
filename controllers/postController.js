@@ -1,22 +1,39 @@
 const Post = require("./../models/postModel");
 
-exports.getAllPosts = (req, res) => {
-  res.status(200).json({
-    status: "success",
-    requestedAt: req.requestTime,
-    data: {
-      posts,
-    },
-  });
+exports.getAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.find();
+    res.status(200).json({
+      status: "success",
+      results: posts.length,
+      data: {
+        posts,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
+  }
 };
 
-exports.getAPost = (req, res) => {
-  const id = req.params.id * 1; //Remember a quick way to make a stirng a number
-  const post = posts.find((element) => element.id === id);
-  res.status(200).json({
-    status: "success",
-    post: post,
-  });
+exports.getAPost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        post,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
+  }
 };
 
 exports.createPost = async (req, res) => {
@@ -31,6 +48,42 @@ exports.createPost = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+
+exports.updatePost = async (req, res) => {
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, //Returns updated post
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        post: updatedPost,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+
+exports.deletePost = async (req, res) => {
+  try {
+    await Post.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      status: "success",
+    });
+  } catch (error) {
+    res.status(404).json({
       status: "fail",
       message: err,
     });
