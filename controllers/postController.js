@@ -7,7 +7,13 @@ exports.getAllPosts = async (req, res) => {
     const excludedFields = ["page", "sort", "limit", "fields"];
     excludedFields.forEach((el) => delete queryObj[el]);
 
-    const query = Post.find(queryObj);
+    let query = Post.find(queryObj);
+
+    //Apply sorting
+
+    if (req.query.sort) {
+      query = query.sort(req.query.sort);
+    }
 
     //EXECUTE QUERY
     const posts = await query;

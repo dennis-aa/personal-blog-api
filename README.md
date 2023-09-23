@@ -1,7 +1,8 @@
-# personal-blog
+# personal-blog-api
+
 ### Hello!
 
-Just a personal blog where I will share my current learnings in tech!
+This will be the back-end to my personal-blog project. Here I'll be developing the api, user authentication, and payment processing features.
 
 ### Objective
 
