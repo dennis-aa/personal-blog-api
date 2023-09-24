@@ -13,7 +13,7 @@ const app = express();
 //Using third-party Middleware
 app.use(morgan("dev"));
 
-//Setup Middleware and import data from JSON
+//Setup Middleware
 
 app.use(express.json());
 

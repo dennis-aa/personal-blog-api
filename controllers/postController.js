@@ -12,8 +12,25 @@ exports.getAllPosts = async (req, res) => {
     //Apply sorting
 
     if (req.query.sort) {
-      query = query.sort(req.query.sort);
+      const sortBy = req.query.sort.split(",").join(" ");
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort("title");
     }
+
+    //Field Limiting
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      query = query.select(fields);
+    } else {
+      query = query.select("-__v");
+    }
+
+    //Pagination
+    const page = req.query.page * 1 || 1; //Retreive the page from the query or set default
+    const limit = req.query.limit * 1 || 10;
+    const skip = (page - 1) * limit;
+    query = query.skip(skip).limit(limit);
 
     //EXECUTE QUERY
     const posts = await query;

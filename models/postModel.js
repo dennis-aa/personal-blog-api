@@ -10,6 +10,7 @@ const postSchema = new mongoose.Schema({
   datePosted: {
     type: String,
     default: currDate,
+    //select: false <-- A way to hide fields from client
   },
   post: {
     type: String,
