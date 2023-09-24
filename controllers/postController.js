@@ -1,39 +1,15 @@
 const Post = require("./../models/postModel");
+const APIFeatures = require("./../utils/apiFeatures");
 
 exports.getAllPosts = async (req, res) => {
   try {
-    //BUILD THE QUERY
-    const queryObj = { ...req.query }; // Create a copy of the query
-    const excludedFields = ["page", "sort", "limit", "fields"];
-    excludedFields.forEach((el) => delete queryObj[el]);
-
-    let query = Post.find(queryObj);
-
-    //Apply sorting
-
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(",").join(" ");
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort("title");
-    }
-
-    //Field Limiting
-    if (req.query.fields) {
-      const fields = req.query.fields.split(",").join(" ");
-      query = query.select(fields);
-    } else {
-      query = query.select("-__v");
-    }
-
-    //Pagination
-    const page = req.query.page * 1 || 1; //Retreive the page from the query or set default
-    const limit = req.query.limit * 1 || 10;
-    const skip = (page - 1) * limit;
-    query = query.skip(skip).limit(limit);
-
     //EXECUTE QUERY
-    const posts = await query;
+    const features = new APIFeatures(Post.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    const posts = await features.query;
 
     //SEND RESPONSE
     res.status(200).json({
