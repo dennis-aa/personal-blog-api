@@ -6,6 +6,9 @@ const postSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, "A post must have a title"],
+    trim: true,
+    minlength: [5, "A title must have more than five characters"],
+    maxlength: [40, "A title must have less than 40 characters"],
   },
   datePosted: {
     type: String,
@@ -15,6 +18,7 @@ const postSchema = new mongoose.Schema({
   post: {
     type: String,
     required: [true, "A post must have an actual post!"],
+    minlength: [10, "A post must have a minumum of 10 characters"],
   },
   tags: [
     {
