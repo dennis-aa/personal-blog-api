@@ -17,13 +17,6 @@ app.use(morgan("dev"));
 
 app.use(express.json());
 
-//Adding our own Middleware for examples sake
-
-app.use((req, res, next) => {
-  console.log("Bienvendios to our Middleware!");
-  next();
-});
-
 //Adding a field to our request
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
@@ -33,5 +26,22 @@ app.use((req, res, next) => {
 //Setup routes
 app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/users", userRouter);
+
+app.all("*", (req, res, next) => {
+  const err = new Error(`Can't find ${req.originalUrl} on this server`);
+  err.status = "fail";
+  err.statusCode = 404;
+
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || "error";
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+  });
+});
 
 module.exports = app;

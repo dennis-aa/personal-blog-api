@@ -4,7 +4,8 @@
   "description": "A blog where I post about my personal projects",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "debug": "ndb server.js"
   },
   "author": "Dennis Arias",
   "license": "ISC",
