@@ -1,6 +1,7 @@
 const express = require("express");
 const postController = require("./../controllers/postController");
 const authController = require("./../controllers/authController");
+const commentRouter = require("./../routes/commentRoutes");
 const router = express.Router();
 
 router
@@ -17,5 +18,6 @@ router
     authController.restrictTo("admin"),
     postController.deletePost
   );
+router.use("/:postId/comments", commentRouter);
 
 module.exports = router;
